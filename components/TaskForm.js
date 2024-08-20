@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+// import { useState, useEffect } from "react";
 
 export default function TaskForm() {
   const [taskInput, setTaskInput] = useState("");
@@ -19,6 +20,15 @@ export default function TaskForm() {
     month: "2-digit",
     day: "2-digit",
   });
+
+  //function to return date of submission
+  function formatDateString(dateString) {
+    const dateParts = dateString.split("-");
+    const year = dateParts[0];
+    const month = dateParts[1];
+    const day = dateParts[2];
+    return `${month}/${day}/${year}`;
+  }
 
   // Function to check if the date is in the past
   function isPastDate(date) {
@@ -302,12 +312,7 @@ export default function TaskForm() {
               <br />
               <strong>Phone:</strong> {task.customerPhone}
               <br />
-              <strong>Receive Date:</strong>{" "}
-              {new Date(task.receiveDate).toLocaleDateString("en-US", {
-                year: "numeric",
-                month: "2-digit",
-                day: "2-digit",
-              })}
+              <strong>Receive Date:</strong> {task.receiveDate.split("T")[0]}
               <br />
               <strong>Priority:</strong> {task.priority}
               <br />
