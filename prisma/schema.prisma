@@ -1,0 +1,25 @@
+// prisma/schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model Task {
+  id             Int      @id @default(autoincrement())
+  task           String
+  customerName   String
+  customerEmail  String
+  customerPhone  String
+  receiveDate    DateTime
+  priority       String
+  productColor   String
+  productBrand   String
+  productType    String
+  problemFound   String
+  completed      Boolean  @default(false)
+}
