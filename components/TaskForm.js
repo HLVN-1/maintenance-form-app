@@ -1,18 +1,24 @@
-import React, { useState } from 'react';
-
+import React, { useState } from "react";
 
 export default function TaskForm() {
-  const [taskInput, setTaskInput] = useState('');
-  const [customerNameInput, setCustomerNameInput] = useState('');
-  const [customerEmailInput, setCustomerEmailInput] = useState('');
-  const [customerPhoneInput, setCustomerPhoneInput] = useState('');
-  const [receiveDateInput, setReceiveDateInput] = useState('');
-  const [priorityInput, setPriorityInput] = useState('');
-  const [productColorInput, setProductColorInput] = useState('');
-  const [productBrandInput, setProductBrandInput] = useState('');
-  const [productTypeInput, setProductTypeInput] = useState('');
-  const [problemFoundInput, setProblemFoundInput] = useState('');
+  const [taskInput, setTaskInput] = useState("");
+  const [customerNameInput, setCustomerNameInput] = useState("");
+  const [customerEmailInput, setCustomerEmailInput] = useState("");
+  const [customerPhoneInput, setCustomerPhoneInput] = useState("");
+  const [receiveDateInput, setReceiveDateInput] = useState("");
+  const [priorityInput, setPriorityInput] = useState("");
+  const [productColorInput, setProductColorInput] = useState("");
+  const [productBrandInput, setProductBrandInput] = useState("");
+  const [productTypeInput, setProductTypeInput] = useState("");
+  const [problemFoundInput, setProblemFoundInput] = useState("");
   const [tasks, setTasks] = useState([]);
+
+  const receiveDate = new Date("2024-12-31T00:00:00.000Z");
+  const formattedDate = receiveDate.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  });
 
   // Function to check if the date is in the past
   function isPastDate(date) {
@@ -36,38 +42,40 @@ export default function TaskForm() {
   // Add a task to the list
   async function addTask() {
     // Input validation
-    if (taskInput === '') {
-      alert('Please enter a task description.');
+    if (taskInput === "") {
+      alert("Please enter a task description.");
       return;
     }
 
-    if (customerNameInput === '') {
-      alert('Please enter the customer name.');
+    if (customerNameInput === "") {
+      alert("Please enter the customer name.");
       return;
     }
 
-    if (receiveDateInput === '') {
-      alert('Please select a receive date.');
+    if (receiveDateInput === "") {
+      alert("Please select a receive date.");
       return;
     }
 
-    if (priorityInput === '') {
-      alert('Please select a priority level.');
+    if (priorityInput === "") {
+      alert("Please select a priority level.");
       return;
     }
 
     if (!isValidEmail(customerEmailInput)) {
-      alert('Please enter a valid email address.');
+      alert("Please enter a valid email address.");
       return;
     }
 
     if (!isValidPhone(customerPhoneInput)) {
-      alert('Please enter a valid phone number.');
+      alert("Please enter a valid phone number.");
       return;
     }
 
     if (isPastDate(receiveDateInput)) {
-      alert('The selected receive date is in the past. Please choose a valid date.');
+      alert(
+        "The selected receive date is in the past. Please choose a valid date."
+      );
       return;
     }
 
@@ -87,35 +95,35 @@ export default function TaskForm() {
     };
 
     try {
-      const response = await fetch('/api/tasks', {
-        method: 'POST',
+      const response = await fetch("/api/tasks", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(taskItem),
       });
 
       if (!response.ok) {
-        throw new Error('Failed to add task');
+        throw new Error("Failed to add task");
       }
 
       const newTask = await response.json();
       setTasks([...tasks, newTask]);
 
       // Clear inputs
-      setTaskInput('');
-      setCustomerNameInput('');
-      setCustomerEmailInput('');
-      setCustomerPhoneInput('');
-      setReceiveDateInput('');
-      setPriorityInput('');
-      setProductColorInput('');
-      setProductBrandInput('');
-      setProductTypeInput('');
-      setProblemFoundInput('');
+      setTaskInput("");
+      setCustomerNameInput("");
+      setCustomerEmailInput("");
+      setCustomerPhoneInput("");
+      setReceiveDateInput("");
+      setPriorityInput("");
+      setProductColorInput("");
+      setProductBrandInput("");
+      setProductTypeInput("");
+      setProblemFoundInput("");
     } catch (error) {
-      console.error('Error adding task:', error);
-      alert('There was an error adding the task. Please try again.');
+      console.error("Error adding task:", error);
+      alert("There was an error adding the task. Please try again.");
     }
   }
 
@@ -125,18 +133,17 @@ export default function TaskForm() {
     newTasks[index].completed = !newTasks[index].completed;
     setTasks(newTasks);
 
-    const response = await fetch('/api/tasks', {
-      method: 'PUT',
+    const response = await fetch("/api/tasks", {
+      method: "PUT",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify(newTasks),
     });
 
     if (!response.ok) {
-      throw new Error('Failed to add task');
+      throw new Error("Failed to add task");
     }
-
   }
 
   // Delete a task from the list
@@ -147,34 +154,37 @@ export default function TaskForm() {
 
   // Filter tasks based on search input and dropdowns
   function filterTasks() {
-    const searchInput = document.getElementById('searchInput').value.toLowerCase();
-    const statusFilter = document.getElementById('statusFilter').value;
-    const priorityFilter = document.getElementById('priorityFilter').value;
+    const searchInput = document
+      .getElementById("searchInput")
+      .value.toLowerCase();
+    const statusFilter = document.getElementById("statusFilter").value;
+    const priorityFilter = document.getElementById("priorityFilter").value;
 
-    const tasks = document.querySelectorAll('.task-item');
+    const tasks = document.querySelectorAll(".task-item");
     tasks.forEach((task) => {
       const taskText = task.textContent.toLowerCase();
-      const isCompleted = task.classList.contains('completed');
+      const isCompleted = task.classList.contains("completed");
 
       let matchesSearch = taskText.includes(searchInput);
       let matchesStatus =
-        (statusFilter === 'completed' && isCompleted) ||
-        (statusFilter === 'pending' && !isCompleted) ||
-        statusFilter === '';
+        (statusFilter === "completed" && isCompleted) ||
+        (statusFilter === "pending" && !isCompleted) ||
+        statusFilter === "";
       let matchesPriority =
-        priorityFilter === '' || taskText.includes(priorityFilter.toLowerCase());
+        priorityFilter === "" ||
+        taskText.includes(priorityFilter.toLowerCase());
 
       if (matchesSearch && matchesStatus && matchesPriority) {
-        task.style.display = 'flex';
+        task.style.display = "flex";
       } else {
-        task.style.display = 'none';
+        task.style.display = "none";
       }
     });
   }
 
   // Dark Mode Toggle
   function toggleDarkMode() {
-    document.body.classList.toggle('dark-mode');
+    document.body.classList.toggle("dark-mode");
   }
 
   return (
@@ -215,7 +225,7 @@ export default function TaskForm() {
           placeholder="Receive Date"
           value={receiveDateInput}
           onChange={(e) => setReceiveDateInput(e.target.value)}
-          min={new Date().toISOString().split('T')[0]}
+          min={new Date().toISOString().split("T")[0]}
         />
         <select
           id="priorityInput"
@@ -281,7 +291,7 @@ export default function TaskForm() {
         {tasks.map((task, index) => (
           <li
             key={index}
-            className={`task-item ${task.completed ? 'completed' : ''}`}
+            className={`task-item ${task.completed ? "completed" : ""}`}
           >
             <div>
               <strong>Task:</strong> {task.task}
@@ -292,7 +302,12 @@ export default function TaskForm() {
               <br />
               <strong>Phone:</strong> {task.customerPhone}
               <br />
-              <strong>Receive Date:</strong> {task.receiveDate}
+              <strong>Receive Date:</strong>{" "}
+              {new Date(task.receiveDate).toLocaleDateString("en-US", {
+                year: "numeric",
+                month: "2-digit",
+                day: "2-digit",
+              })}
               <br />
               <strong>Priority:</strong> {task.priority}
               <br />
@@ -306,7 +321,7 @@ export default function TaskForm() {
             </div>
             <div className="actions">
               <button onClick={() => markCompleted(index)}>
-                {task.completed ? 'Unmark' : 'Complete'}
+                {task.completed ? "Unmark" : "Complete"}
               </button>
               <button onClick={() => deleteTask(index)}>Delete</button>
             </div>
@@ -319,10 +334,18 @@ export default function TaskForm() {
       {/* Footer Component */}
       <footer className="footer">
         <div className="social-links">
-          <a href="https://twitter.com" target="_blank" rel="noopener noreferrer">
+          <a
+            href="https://twitter.com"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             <img src="" alt="Twitter" />
           </a>
-          <a href="https://facebook.com" target="_blank" rel="noopener noreferrer">
+          <a
+            href="https://facebook.com"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             <img src="/icons/facebook-icon.png" alt="Facebook" />
           </a>
         </div>
