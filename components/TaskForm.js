@@ -6,11 +6,15 @@ export default function TaskForm() {
   const [customerNameInput, setCustomerNameInput] = useState("");
   const [customerEmailInput, setCustomerEmailInput] = useState("");
   const [customerPhoneInput, setCustomerPhoneInput] = useState("");
+  const [customerAddressInput, setCustomerAddressInput] = useState("");
+  const [customerHoursInput, setCustomerHoursInput] = useState("");
   const [receiveDateInput, setReceiveDateInput] = useState("");
+  const [routeInput, setRouteInput] = useState("");
   const [priorityInput, setPriorityInput] = useState("");
   const [productColorInput, setProductColorInput] = useState("");
   const [productBrandInput, setProductBrandInput] = useState("");
   const [productTypeInput, setProductTypeInput] = useState("");
+  const [productQuantityInput, setProductQuantityInput] = useState("");
   const [problemFoundInput, setProblemFoundInput] = useState("");
   const [tasks, setTasks] = useState([]);
 
@@ -31,10 +35,16 @@ export default function TaskForm() {
   }
 
   // Function to check if the date is in the past
-  function isPastDate(date) {
+  function isPastDate(dateString) {
+    const dateParts = dateString.split("-");
+    const selectedDate = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
     const today = new Date();
-    const selectedDate = new Date(date);
-    return selectedDate < today.setHours(0, 0, 0, 0);
+    const startOfDay = new Date(
+      today.getFullYear(),
+      today.getMonth(),
+      today.getDate()
+    );
+    return selectedDate < startOfDay;
   }
 
   // Function to validate email
@@ -63,7 +73,7 @@ export default function TaskForm() {
     }
 
     if (receiveDateInput === "") {
-      alert("Please select a receive date.");
+      alert("Please select a submission date.");
       return;
     }
 
@@ -72,19 +82,19 @@ export default function TaskForm() {
       return;
     }
 
-    if (!isValidEmail(customerEmailInput)) {
-      alert("Please enter a valid email address.");
-      return;
-    }
+    // if (!isValidEmail(customerEmailInput)) {
+    //   alert("Please enter a valid email address.");
+    //   return;
+    // }
 
-    if (!isValidPhone(customerPhoneInput)) {
-      alert("Please enter a valid phone number.");
-      return;
-    }
+    // if (!isValidPhone(customerPhoneInput)) {
+    //   alert("Please enter a valid phone number.");
+    //   return;
+    // }
 
     if (isPastDate(receiveDateInput)) {
       alert(
-        "The selected receive date is in the past. Please choose a valid date."
+        "The selected submission date is in the past. Please choose a valid date."
       );
       return;
     }
@@ -94,12 +104,16 @@ export default function TaskForm() {
       task: taskInput,
       customerName: customerNameInput,
       customerEmail: customerEmailInput,
+      customerAddress: customerAddressInput,
+      // customerHours: customerHoursInput,
       customerPhone: customerPhoneInput,
+      // route: routeInput,
       receiveDate: new Date(receiveDateInput),
       priority: priorityInput,
       productColor: productColorInput,
       productBrand: productBrandInput,
       productType: productTypeInput,
+      // productQuantity: productQuantityInput,
       problemFound: problemFoundInput,
       completed: false,
     };
@@ -125,11 +139,15 @@ export default function TaskForm() {
       setCustomerNameInput("");
       setCustomerEmailInput("");
       setCustomerPhoneInput("");
+      // setCustomerHoursInput("");
+      setCustomerAddressInput("");
+      // setRouteInput("");
       setReceiveDateInput("");
       setPriorityInput("");
       setProductColorInput("");
       setProductBrandInput("");
       setProductTypeInput("");
+      // setProductQuantityInput("");
       setProblemFoundInput("");
     } catch (error) {
       console.error("Error adding task:", error);
@@ -199,83 +217,146 @@ export default function TaskForm() {
 
   return (
     <div className="container">
-      <h1>Maintenance Task Tracker</h1>
+      <h1>Maintenance Task Form</h1>
       <div className="task-form">
-        <input
-          type="text"
-          id="taskInput"
-          placeholder="Task Description"
-          value={taskInput}
-          onChange={(e) => setTaskInput(e.target.value)}
-        />
-        <input
-          type="text"
-          id="customerNameInput"
-          placeholder="Customer Name"
-          value={customerNameInput}
-          onChange={(e) => setCustomerNameInput(e.target.value)}
-        />
-        <input
-          type="email"
-          id="customerEmailInput"
-          placeholder="Customer Email"
-          value={customerEmailInput}
-          onChange={(e) => setCustomerEmailInput(e.target.value)}
-        />
-        <input
-          type="tel"
-          id="customerPhoneInput"
-          placeholder="Customer Phone"
-          value={customerPhoneInput}
-          onChange={(e) => setCustomerPhoneInput(e.target.value)}
-        />
-        <input
-          type="date"
-          id="receiveDateInput"
-          placeholder="Receive Date"
-          value={receiveDateInput}
-          onChange={(e) => setReceiveDateInput(e.target.value)}
-          min={new Date().toISOString().split("T")[0]}
-        />
-        <select
-          id="priorityInput"
-          value={priorityInput}
-          onChange={(e) => setPriorityInput(e.target.value)}
-        >
-          <option value="">Select Priority</option>
-          <option value="High">High</option>
-          <option value="Medium">Medium</option>
-          <option value="Low">Low</option>
-        </select>
-        {/* Product Information */}
-        <input
-          type="text"
-          id="productColorInput"
-          placeholder="Product Color"
-          value={productColorInput}
-          onChange={(e) => setProductColorInput(e.target.value)}
-        />
-        <input
-          type="text"
-          id="productBrandInput"
-          placeholder="Product Brand"
-          value={productBrandInput}
-          onChange={(e) => setProductBrandInput(e.target.value)}
-        />
-        <input
-          type="text"
-          id="productTypeInput"
-          placeholder="Product Type"
-          value={productTypeInput}
-          onChange={(e) => setProductTypeInput(e.target.value)}
-        />
-        <input
-          type="text"
-          id="problemFoundInput"
-          placeholder="Problem Found"
-          value={problemFoundInput}
-          onChange={(e) => setProblemFoundInput(e.target.value)}
-        />
+        <div className="form-group">
+          <label>Contact Name*</label>
+          <input
+            type="text"
+            id="customerNameInput"
+            placeholder="Enter contact's name"
+            value={customerNameInput}
+            onChange={(e) => setCustomerNameInput(e.target.value)}
+            required
+          />
+        </div>
+
+        <div className="form-group">
+          <label>Your Email</label>
+          <input
+            type="email"
+            id="customerEmailInput"
+            placeholder="Enter your email if you want confirmation"
+            value={customerEmailInput}
+            onChange={(e) => setCustomerEmailInput(e.target.value)}
+          />
+        </div>
+
+        <div className="form-group">
+          <label>Customer's Address*</label>
+          <input
+            type="text"
+            // id="customerAddressInput"
+            placeholder="Enter the address"
+            value={customerAddressInput}
+            onChange={(e) => setCustomerAddressInput(e.target.value)}
+          />
+        </div>
+
+        <div className="form-group">
+          <label>Customer Hours</label>
+          <input
+            type="text"
+            id="customerHours"
+            placeholder="Customer's hours?"
+            value={customerHoursInput}
+            onChange={(e) => setCustomerHoursInput(e.target.value)}
+          />
+        </div>
+
+        <div className="form-group">
+          <label>Date of Form Submission</label>
+          <input
+            type="date"
+            id="receiveDateInput"
+            placeholder="Select submission date"
+            value={receiveDateInput}
+            onChange={(e) => setReceiveDateInput(e.target.value)}
+            min={new Date().toISOString().split("T")[0]}
+          />
+        </div>
+
+        <div className="form-group">
+          <label>Route #</label>
+          <input
+            type="text"
+            id="routeInput"
+            placeholder="Enter route #"
+            value={routeInput}
+            onChange={(e) => setRouteInput(e.target.value)}
+          />
+        </div>
+
+        <div className="form-group">
+          <label>Product Brand</label>
+          <input
+            type="text"
+            id="productBrandInput"
+            placeholder="Sanis/Sig"
+            value={productBrandInput}
+            onChange={(e) => setProductBrandInput(e.target.value)}
+          />
+        </div>
+
+        <div className="form-group">
+          <label>Product Type</label>
+          <input
+            type="text"
+            id="productTypeInput"
+            placeholder="JRT, Auto Soap, etc"
+            value={productTypeInput}
+            onChange={(e) => setProductTypeInput(e.target.value)}
+          />
+        </div>
+
+        <div className="form-group">
+          <label>Product Color</label>
+          <input
+            type="text"
+            id="productColorInput"
+            placeholder="Indigo, Black, etc"
+            value={productColorInput}
+            onChange={(e) => setProductColorInput(e.target.value)}
+          />
+        </div>
+
+        <div className="form-group">
+          <label>Quantity</label>
+          <input
+            type="text"
+            id="productQuantityInput"
+            placeholder="How many?"
+            value={productQuantityInput}
+            onChange={(e) => setProductQuantityInput(e.target.value)}
+          />
+        </div>
+
+        <div className="form-group">
+          <label>What do you need done?</label>
+          <textarea
+            type="text"
+            className="mobile-text-field"
+            id="taskInput"
+            placeholder="Enter task description"
+            value={taskInput}
+            onChange={(e) => setTaskInput(e.target.value)}
+          />
+        </div>
+
+        <div className="form-group">
+          <label>Priority</label>
+          <select
+            id="priorityInput"
+            value={priorityInput}
+            onChange={(e) => setPriorityInput(e.target.value)}
+          >
+            <option value="">Select Priority</option>
+            <option value="High">High</option>
+            <option value="Medium">Medium</option>
+            <option value="Low">Low</option>
+          </select>
+        </div>
+
         <button onClick={addTask}>Add Task</button>
       </div>
       <div className="filters">
@@ -308,11 +389,13 @@ export default function TaskForm() {
               <br />
               <strong>Customer Name:</strong> {task.customerName}
               <br />
+              <strong>Customer Address:</strong> {task.customerAddress}
+              <br />
               <strong>Email:</strong> {task.customerEmail}
               <br />
               <strong>Phone:</strong> {task.customerPhone}
               <br />
-              <strong>Receive Date:</strong> {task.receiveDate.split("T")[0]}
+              <strong>Submission Date:</strong> {task.receiveDate.split("T")[0]}
               <br />
               <strong>Priority:</strong> {task.priority}
               <br />
@@ -338,7 +421,7 @@ export default function TaskForm() {
       </button>
       {/* Footer Component */}
       <footer className="footer">
-        <div className="social-links">
+        {/* <div className="social-links">
           <a
             href="https://twitter.com"
             target="_blank"
@@ -353,10 +436,10 @@ export default function TaskForm() {
           >
             <img src="/icons/facebook-icon.png" alt="Facebook" />
           </a>
-        </div>
+        </div> */}
         <div className="company-info">
           <p>© 2024 Maintenance Solutions Inc. All Rights Reserved.</p>
-          <p>Contact us at support@maintenancesolutions.com</p>
+          <p>Contact us at maintenance.form.app@gmail.com</p>
         </div>
       </footer>
     </div>

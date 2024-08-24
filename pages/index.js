@@ -1,13 +1,13 @@
-import Head from 'next/head';
-import TaskForm from '../components/TaskForm';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import Head from "next/head";
+import TaskForm from "../components/TaskForm";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 export default function Home() {
   return (
     <div>
       <Head>
-        <title>Maintenance Task Tracker</title>
-        <meta name="description" content="Track maintenance tasks easily" />
+        <title>Maintenance Task Form</title>
+        <meta name="description" content="Submit maintenance tasks easily" />
         <link rel="icon" href="/favicon.ico" />
         <link
           rel="stylesheet"
