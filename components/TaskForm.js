@@ -113,7 +113,7 @@ export default function TaskForm() {
       productColor: productColorInput,
       productBrand: productBrandInput,
       productType: productTypeInput,
-      // productQuantity: productQuantityInput,
+      productQuantity: productQuantityInput,
       problemFound: problemFoundInput,
       completed: false,
     };
@@ -139,15 +139,15 @@ export default function TaskForm() {
       setCustomerNameInput("");
       setCustomerEmailInput("");
       setCustomerPhoneInput("");
-      // setCustomerHoursInput("");
+      setCustomerHoursInput("");
       setCustomerAddressInput("");
-      // setRouteInput("");
+      setRouteInput("");
       setReceiveDateInput("");
       setPriorityInput("");
       setProductColorInput("");
       setProductBrandInput("");
       setProductTypeInput("");
-      // setProductQuantityInput("");
+      setProductQuantityInput("");
       setProblemFoundInput("");
     } catch (error) {
       console.error("Error adding task:", error);
@@ -404,6 +404,8 @@ export default function TaskForm() {
               <strong>Product Brand:</strong> {task.productBrand}
               <br />
               <strong>Product Type:</strong> {task.productType}
+              <br />
+              <strong>Product Quantity:</strong> {task.productQuantity}
               <br />
               <strong>Problem Found:</strong> {task.problemFound}
             </div>

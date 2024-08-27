@@ -21,6 +21,7 @@ model Task {
   productColor    String
   productBrand    String
   productType     String
+  productQuantity String
   problemFound    String
   completed       Boolean  @default(false)
 }
