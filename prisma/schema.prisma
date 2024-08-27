@@ -10,16 +10,17 @@ datasource db {
 }
 
 model Task {
-  id             Int      @id @default(autoincrement())
-  task           String
-  customerName   String
-  customerEmail  String
-  customerPhone  String
-  receiveDate    DateTime
-  priority       String
-  productColor   String
-  productBrand   String
-  productType    String
-  problemFound   String
-  completed      Boolean  @default(false)
+  id              Int      @id @default(autoincrement())
+  task            String
+  customerName    String
+  customerEmail   String
+  customerPhone   String
+  customerAddress String
+  receiveDate     DateTime
+  priority        String
+  productColor    String
+  productBrand    String
+  productType     String
+  problemFound    String
+  completed       Boolean  @default(false)
 }
