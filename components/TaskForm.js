@@ -191,7 +191,7 @@ export default function TaskForm() {
     const taskId = newTasks[index].id;
     const updatedTask = { id: taskId, completed: newTasks[index].completed };
 
-    const response = await fetch("/api/tasks", {
+    const response = await fetch(`/api/tasks/${taskId}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
