@@ -16,6 +16,8 @@ model Task {
   customerEmail   String
   customerPhone   String
   customerAddress String
+  customerHours   String   @default("")
+  route           String
   receiveDate     DateTime
   priority        String
   productColor    String

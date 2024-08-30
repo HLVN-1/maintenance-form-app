@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 // import { useState, useEffect } from "react";
 
 export default function TaskForm() {
@@ -24,6 +24,16 @@ export default function TaskForm() {
     month: "2-digit",
     day: "2-digit",
   });
+
+  useEffect(() => {
+    async function fetchTasks() {
+      const response = await fetch("/api/tasks");
+      const tasks = await response.json();
+      setTasks(tasks);
+    }
+
+    fetchTasks();
+  }, []);
 
   //function to return date of submission
   function formatDateString(dateString) {
@@ -99,15 +109,32 @@ export default function TaskForm() {
       return;
     }
 
-    // Create a new task item
+    // Create a new task item with only non-empty fields
+    // const taskItem = {};
+    // if (taskInput) taskItem.task = taskInput;
+    // if (customerNameInput) taskItem.customerName = customerNameInput;
+    // if (customerEmailInput) taskItem.customerEmail = customerEmailInput;
+    // if (customerAddressInput) taskItem.customerAddress = customerAddressInput;
+    // if (customerHoursInput) taskItem.customerHours = customerHoursInput;
+    // if (customerPhoneInput) taskItem.customerPhone = customerPhoneInput;
+    // if (routeInput) taskItem.route = routeInput;
+    // if (receiveDateInput) taskItem.receiveDate = new Date(receiveDateInput);
+    // if (priorityInput) taskItem.priority = priorityInput;
+    // if (productColorInput) taskItem.productColor = productColorInput;
+    // if (productBrandInput) taskItem.productBrand = productBrandInput;
+    // if (productTypeInput) taskItem.productType = productTypeInput;
+    // if (productQuantityInput) taskItem.productQuantity = productQuantityInput;
+    // if (problemFoundInput) taskItem.problemFound = problemFoundInput;
+    // taskItem.completed = false;
+
     const taskItem = {
       task: taskInput,
       customerName: customerNameInput,
       customerEmail: customerEmailInput,
       customerAddress: customerAddressInput,
-      // customerHours: customerHoursInput,
+      customerHours: customerHoursInput,
       customerPhone: customerPhoneInput,
-      // route: routeInput,
+      route: routeInput,
       receiveDate: new Date(receiveDateInput),
       priority: priorityInput,
       productColor: productColorInput,
@@ -161,21 +188,39 @@ export default function TaskForm() {
     newTasks[index].completed = !newTasks[index].completed;
     setTasks(newTasks);
 
+    const taskId = newTasks[index].id;
+    const updatedTask = { id: taskId, completed: newTasks[index].completed };
+
     const response = await fetch("/api/tasks", {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(newTasks),
+      body: JSON.stringify(updatedTask),
     });
 
     if (!response.ok) {
-      throw new Error("Failed to add task");
+      throw new Error(
+        `Failed to update task: ${response.status} ${response.statusText}`
+      );
     }
   }
 
   // Delete a task from the list
-  function deleteTask(index) {
+  async function deleteTask(index) {
+    const taskId = tasks[index].id;
+    console.log(`Deleting task with ID ${taskId}`);
+    const response = await fetch(`/api/tasks/${taskId}`, {
+      method: "DELETE",
+    });
+
+    console.log(`Response status: ${response.status} ${response.statusText}`);
+    if (!response.ok) {
+      throw new Error(
+        `Failed to delete task: ${response.status} ${response.statusText}`
+      );
+    }
+
     const newTasks = tasks.filter((_, i) => i !== index);
     setTasks(newTasks);
   }
@@ -385,19 +430,21 @@ export default function TaskForm() {
             className={`task-item ${task.completed ? "completed" : ""}`}
           >
             <div>
-              <strong>Task:</strong> {task.task}
+              <strong>Priority:</strong> {task.priority}
               <br />
-              <strong>Customer Name:</strong> {task.customerName}
+              <strong>Submission Date:</strong> {task.receiveDate.split("T")[0]}
               <br />
-              <strong>Customer Address:</strong> {task.customerAddress}
+              <strong>Contact Name:</strong> {task.customerName}
+              <br />
+              <strong>Customer's Address:</strong> {task.customerAddress}
+              <br />
+              <strong>Customer Hours:</strong> {task.customerHours}
               <br />
               <strong>Email:</strong> {task.customerEmail}
               <br />
               <strong>Phone:</strong> {task.customerPhone}
               <br />
-              <strong>Submission Date:</strong> {task.receiveDate.split("T")[0]}
-              <br />
-              <strong>Priority:</strong> {task.priority}
+              <strong>Route #:</strong> {task.route}
               <br />
               <strong>Product Color:</strong> {task.productColor}
               <br />
@@ -407,7 +454,9 @@ export default function TaskForm() {
               <br />
               <strong>Product Quantity:</strong> {task.productQuantity}
               <br />
-              <strong>Problem Found:</strong> {task.problemFound}
+              <strong>Task:</strong> {task.task}
+              <br />
+              {/* <strong>Problem Found:</strong> {task.problemFound} */}
             </div>
             <div className="actions">
               <button onClick={() => markCompleted(index)}>
