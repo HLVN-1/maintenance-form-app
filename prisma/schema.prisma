@@ -16,11 +16,14 @@ model Task {
   customerEmail   String
   customerPhone   String
   customerAddress String
+  customerHours   String   @default("")
+  route           String
   receiveDate     DateTime
   priority        String
   productColor    String
   productBrand    String
   productType     String
+  productQuantity String
   problemFound    String
   completed       Boolean  @default(false)
 }
